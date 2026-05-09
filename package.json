@@ -1,0 +1,36 @@
+{
+  "name": "el-parte",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "description": "ElParte - gestión de obras de construcción, fichaje de trabajadores y control de costes.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "autoprefixer": "^10.5.0",
+    "bcryptjs": "^3.0.3",
+    "eslint": "^10.2.1",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "firebase": "^12.13.0",
+    "globals": "^17.5.0",
+    "jspdf": "^4.2.1",
+    "postcss": "^8.5.14",
+    "react-router-dom": "^7.15.0",
+    "tailwindcss": "^4.2.4",
+    "vite": "^8.0.10",
+    "xlsx": "^0.18.5"
+  }
+}
