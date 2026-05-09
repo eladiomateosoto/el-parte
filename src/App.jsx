@@ -11,6 +11,7 @@ import WorkerHome from './pages/worker/Home.jsx';
 import WorkerCheckin from './pages/worker/Checkin.jsx';
 import WorkerDailyPart from './pages/worker/DailyPart.jsx';
 import WorkerLogin from './pages/worker/Login.jsx';
+import Debug from './pages/Debug.jsx';
 import './index.css';
 
 // Protected route components
@@ -99,6 +100,7 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
+      <Route path="/debug" element={<Debug />} />
 
       {/* Admin routes */}
       <Route path="/admin/login" element={<AdminLogin />} />
