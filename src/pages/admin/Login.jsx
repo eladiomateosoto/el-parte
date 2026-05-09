@@ -16,10 +16,20 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
-      await adminLogin(email, password);
+      const user = await adminLogin(email, password);
+      console.log('Login successful:', user);
       navigate('/admin/dashboard');
     } catch (err) {
-      setError(err.message || 'Error al iniciar sesión');
+      console.error('Login error:', err);
+      const errorMap = {
+        'auth/user-not-found': 'El usuario no existe',
+        'auth/wrong-password': 'Contraseña incorrecta',
+        'auth/invalid-email': 'Email inválido',
+        'auth/too-many-requests': 'Demasiados intentos. Intenta más tarde',
+        'auth/network-request-failed': 'Error de conexión. Verifica tu internet'
+      };
+      const message = errorMap[err.code] || err.message || 'Error al iniciar sesión';
+      setError(message);
     } finally {
       setLoading(false);
     }
