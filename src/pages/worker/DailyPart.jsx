@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWorker } from '../../contexts/WorkerContext';
 import { getActiveWorks, getActiveCategories, createPart } from '../../services/firestore';
-import { uploadPartPhoto } from '../../services/storage';
 import { calculateTotalHours, formatDate } from '../../utils/helpers';
 
 export default function WorkerDailyPart() {
@@ -13,7 +12,6 @@ export default function WorkerDailyPart() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [photos, setPhotos] = useState([]);
   const [formData, setFormData] = useState({
     obraId: '',
     fecha: new Date().toISOString().split('T')[0],
@@ -74,20 +72,6 @@ export default function WorkerDailyPart() {
     setFormData({ ...formData, tareas: newTareas });
   };
 
-  const handlePhotoUpload = (e) => {
-    const files = Array.from(e.target.files);
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setPhotos([...photos, { file, preview: event.target.result }]);
-      };
-      reader.readAsDataURL(file);
-    });
-  };
-
-  const handleRemovePhoto = (index) => {
-    setPhotos(photos.filter((_, i) => i !== index));
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -119,18 +103,6 @@ export default function WorkerDailyPart() {
         formData.tareas.map((t) => ({ hours: parseFloat(t.horas) || 0 }))
       );
 
-      // Upload photos
-      const photoURLs = [];
-      for (const photo of photos) {
-        const url = await uploadPartPhoto(
-          photo.file,
-          formData.obraId,
-          worker.id,
-          formData.fecha
-        );
-        photoURLs.push(url);
-      }
-
       // Create part
       const partData = {
         trabajadorId: worker.id,
@@ -143,7 +115,6 @@ export default function WorkerDailyPart() {
         tareas: formData.tareas.filter((t) => t.horas && parseFloat(t.horas) > 0),
         totalHoras: totalHours,
         observaciones: formData.observaciones,
-        fotos: photoURLs,
         coordenadasEntrada: { lat: 0, lng: 0 }, // TODO: Get from checkin
         coordenadasSalida: { lat: 0, lng: 0 }, // TODO: Get from checkin
       };
@@ -160,7 +131,6 @@ export default function WorkerDailyPart() {
           tareas: [{ categoriaId: '', categoriaNombre: '', horas: '' }],
           observaciones: '',
         });
-        setPhotos([]);
       }, 2000);
     } catch (err) {
       setError('Error al registrar el parte');
@@ -340,50 +310,6 @@ export default function WorkerDailyPart() {
               )}
             </div>
 
-            {/* Photos */}
-            <div>
-              <label className="block text-sm font-bold text-gray-900 mb-3">
-                Fotos
-              </label>
-
-              {/* Photo preview */}
-              {photos.length > 0 && (
-                <div className="grid grid-cols-2 gap-3 mb-4">
-                  {photos.map((photo, index) => (
-                    <div key={index} className="relative">
-                      <img
-                        src={photo.preview}
-                        alt={`Foto ${index + 1}`}
-                        className="w-full h-24 object-cover rounded-lg"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => handleRemovePhoto(index)}
-                        className="absolute top-1 right-1 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold hover:bg-red-700"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Upload button */}
-              <label className="w-full bg-white border-2 border-dashed border-orange-400 rounded-lg p-6 text-center cursor-pointer hover:bg-orange-50 transition">
-                <input
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  onChange={handlePhotoUpload}
-                  className="hidden"
-                />
-                <p className="text-3xl mb-2">📷</p>
-                <p className="font-semibold text-gray-900">Adjuntar fotos</p>
-                <p className="text-xs text-gray-600 mt-1">
-                  {photos.length > 0 ? `${photos.length} foto(s)` : 'Cámara o galería'}
-                </p>
-              </label>
-            </div>
 
             {/* Submit button */}
             <button
