@@ -1,21 +1,17 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { WorkerProvider, useWorker } from './contexts/WorkerContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext.jsx';
+import { WorkerProvider, useWorker } from './contexts/WorkerContext.jsx';
+import AdminDashboard from './pages/admin/Dashboard.jsx';
+import AdminWorks from './pages/admin/Works.jsx';
+import AdminWorkers from './pages/admin/Workers.jsx';
+import AdminCategories from './pages/admin/Categories.jsx';
+import AdminReports from './pages/admin/Reports.jsx';
+import AdminLogin from './pages/admin/Login.jsx';
+import WorkerHome from './pages/worker/Home.jsx';
+import WorkerCheckin from './pages/worker/Checkin.jsx';
+import WorkerDailyPart from './pages/worker/DailyPart.jsx';
+import WorkerLogin from './pages/worker/Login.jsx';
 import './index.css';
-
-// Admin pages - placeholders for now
-const AdminDashboard = () => <div className="p-8">Admin Dashboard</div>;
-const AdminWorks = () => <div className="p-8">Admin Works</div>;
-const AdminWorkers = () => <div className="p-8">Admin Workers</div>;
-const AdminCategories = () => <div className="p-8">Admin Categories</div>;
-const AdminReports = () => <div className="p-8">Admin Reports</div>;
-const AdminLogin = () => <div className="p-8">Admin Login</div>;
-
-// Worker pages - placeholders for now
-const WorkerHome = () => <div className="p-8">Worker Home</div>;
-const WorkerCheckin = () => <div className="p-8">Worker Checkin</div>;
-const WorkerDailyPart = () => <div className="p-8">Worker Daily Part</div>;
-const WorkerLogin = () => <div className="p-8">Worker Login</div>;
 
 // Protected route components
 const AdminRoute = ({ children }) => {

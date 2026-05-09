@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { db } from '../../services/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
+import { initializeDefaultCategories } from '../../services/firestore';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -15,7 +16,12 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchStats();
+    const init = async () => {
+      await initializeDefaultCategories();
+      await fetchStats();
+    };
+
+    init();
   }, []);
 
   const fetchStats = async () => {

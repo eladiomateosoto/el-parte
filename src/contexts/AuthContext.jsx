@@ -5,7 +5,7 @@ import {
   onAuthStateChanged 
 } from 'firebase/auth';
 import { auth, db } from '../services/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 const AuthContext = createContext();
 
@@ -27,11 +27,22 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        // Check if admin or worker
+        const adminEmails = (import.meta.env.VITE_ADMIN_EMAILS || '')
+          .split(',')
+          .map((email) => email.trim().toLowerCase())
+          .filter(Boolean);
+
         const adminRef = doc(db, 'admins', currentUser.uid);
         const adminDoc = await getDoc(adminRef);
-        
-        if (adminDoc.exists()) {
+        const isTrustedAdmin = currentUser.email && adminEmails.includes(currentUser.email.toLowerCase());
+
+        if (adminDoc.exists() || isTrustedAdmin) {
+          if (!adminDoc.exists()) {
+            await setDoc(adminRef, {
+              email: currentUser.email || '',
+              creadoEn: serverTimestamp(),
+            });
+          }
           setUserRole('admin');
         } else {
           // Try to get worker data
@@ -39,9 +50,11 @@ export const AuthProvider = ({ children }) => {
           const workerDoc = await getDoc(workerRef);
           if (workerDoc.exists()) {
             setUserRole('worker');
+          } else {
+            setUserRole(null);
           }
         }
-        
+
         setUser(currentUser);
       } else {
         setUser(null);

@@ -170,7 +170,7 @@ export default function WorkerCheckin() {
         {locationData && nearbyWorks.length > 0 && (
           <div className="space-y-4">
             <h3 className="text-lg font-bold text-gray-900 mb-4">
-              Obras detectadas (< 50m)
+              Obras detectadas (&lt; 50m)
             </h3>
             {nearbyWorks.map((work) => (
               <button
