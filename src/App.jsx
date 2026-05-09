@@ -42,11 +42,64 @@ const WorkerRoute = ({ children }) => {
   return children;
 };
 
+function LandingPage() {
+  const { user, userRole, loading } = useAuth();
+
+  if (loading) {
+    return <div className="flex items-center justify-center min-h-screen">Cargando...</div>;
+  }
+
+  if (user && userRole === 'admin') {
+    return <Navigate to="/admin/dashboard" />;
+  }
+
+  if (user && userRole === 'worker') {
+    return <Navigate to="/worker/home" />;
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center p-4">
+      <div className="bg-white rounded-3xl shadow-2xl p-10 max-w-3xl w-full">
+        <div className="text-center mb-10">
+          <h1 className="text-5xl font-bold text-orange-600 mb-4">ElParte</h1>
+          <p className="text-gray-600 text-lg">El sistema de control de obra para administradores y trabajadores.</p>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="p-8 rounded-3xl border border-orange-100 bg-orange-50">
+            <h2 className="text-2xl font-semibold text-orange-700 mb-4">Soy administrador</h2>
+            <p className="text-gray-600 mb-6">Accede al panel para gestionar obras, trabajadores y categorías.</p>
+            <a
+              href="/admin/login"
+              className="inline-flex items-center justify-center w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 rounded-lg transition"
+            >
+              Iniciar sesión admin
+            </a>
+          </div>
+
+          <div className="p-8 rounded-3xl border border-orange-100 bg-white">
+            <h2 className="text-2xl font-semibold text-orange-700 mb-4">Soy trabajador</h2>
+            <p className="text-gray-600 mb-6">Fichaje y partes diarios con acceso rápido por PIN.</p>
+            <a
+              href="/worker/login"
+              className="inline-flex items-center justify-center w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 rounded-lg transition"
+            >
+              Acceder como trabajador
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function AppRoutes() {
   const { user, userRole } = useAuth();
 
   return (
     <Routes>
+      <Route path="/" element={<LandingPage />} />
+
       {/* Admin routes */}
       <Route path="/admin/login" element={<AdminLogin />} />
       <Route
@@ -117,17 +170,7 @@ function AppRoutes() {
         }
       />
 
-      {/* Root redirect */}
-      <Route
-        path="/"
-        element={
-          user && userRole === 'admin' ? (
-            <Navigate to="/admin/dashboard" />
-          ) : (
-            <Navigate to="/worker/login" />
-          )
-        }
-      />
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 }

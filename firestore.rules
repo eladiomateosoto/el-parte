@@ -14,8 +14,10 @@ service cloud.firestore {
     }
 
     match /trabajadores/{workerId} {
-      allow read: if isAuthenticated() && request.auth.uid == workerId;
-      allow write: if isAuthenticated() && request.auth.uid == workerId;
+      // Allow worker list and worker profile reads from the login screen.
+      // Writes are limited to the authenticated worker or admin.
+      allow read: if true;
+      allow write: if isAuthenticated() && (request.auth.uid == workerId || isAdmin());
     }
 
     match /obras/{document=**} {
