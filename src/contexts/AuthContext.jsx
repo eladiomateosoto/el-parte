@@ -27,10 +27,17 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        const adminEmails = (import.meta.env.VITE_ADMIN_EMAILS || '')
+        const defaultAdminEmails = [
+          'eladiomateosoto@gmail.com',
+          'amrosquet@hotmail.com',
+        ];
+
+        const envAdminEmails = (import.meta.env.VITE_ADMIN_EMAILS || '')
           .split(',')
           .map((email) => email.trim().toLowerCase())
           .filter(Boolean);
+
+        const adminEmails = Array.from(new Set([...defaultAdminEmails, ...envAdminEmails]));
 
         const adminRef = doc(db, 'admins', currentUser.uid);
         const adminDoc = await getDoc(adminRef);
