@@ -131,72 +131,38 @@ export default function AdminWorkers() {
       </div>
 
         {/* Workers table */}
-        <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="bg-slate-900 rounded-3xl shadow-lg border border-slate-700 overflow-hidden">
           {loading ? (
-            <div className="p-8 text-center text-gray-500">Cargando trabajadores...</div>
+            <div className="p-8 text-center text-slate-400">Cargando trabajadores...</div>
           ) : workers.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">
+            <div className="p-8 text-center text-slate-400">
               No hay trabajadores disponibles. Crea el primer trabajador.
             </div>
           ) : (
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-slate-700">
+              <thead className="bg-slate-950">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Nombre
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Puesto
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    €/Hora
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Estado
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Acciones
-                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">Nombre</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">Puesto</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">€/Hora</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">Estado</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">Acciones</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-slate-900 divide-y divide-slate-800">
                 {workers.map((worker) => (
-                  <tr key={worker.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {worker.nombre}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                      {worker.puesto}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                      {worker.costePorHora.toFixed(2)} €
-                    </td>
+                  <tr key={worker.id} className="hover:bg-slate-800">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">{worker.nombre}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{worker.puesto}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{worker.costePorHora.toFixed(2)} €</td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          worker.activo
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-red-100 text-red-800'
-                        }`}
-                      >
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${worker.activo ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                         {worker.activo ? 'Activo' : 'Inactivo'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm space-x-2">
-                      <button
-                        onClick={() => handleOpenForm(worker)}
-                        className="text-blue-600 hover:text-blue-900 font-semibold"
-                      >
-                        Editar
-                      </button>
-                      <button
-                        onClick={() => handleToggleWorkerStatus(worker.id, worker.activo)}
-                        className={`font-semibold ${
-                          worker.activo
-                            ? 'text-red-600 hover:text-red-900'
-                            : 'text-green-600 hover:text-green-900'
-                        }`}
-                      >
+                    <td className="px-6 py-4 whitespace-nowrap text-sm space-x-3">
+                      <button onClick={() => handleOpenForm(worker)} className="text-sky-400 hover:text-sky-200 font-semibold">Editar</button>
+                      <button onClick={() => handleToggleWorkerStatus(worker.id, worker.activo)} className={`font-semibold ${worker.activo ? 'text-red-400 hover:text-red-200' : 'text-green-400 hover:text-green-200'}`}>
                         {worker.activo ? 'Desactivar' : 'Activar'}
                       </button>
                     </td>
@@ -209,21 +175,17 @@ export default function AdminWorkers() {
 
       {/* Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-96 overflow-y-auto">
-            <div className="bg-orange-600 px-6 py-4 flex justify-between items-center">
-              <h2 className="text-xl font-bold text-white">
-                {editingWorker ? 'Editar trabajador' : 'Nuevo trabajador'}
-              </h2>
-              <button
-                onClick={() => setShowForm(false)}
-                className="text-white hover:bg-orange-700 px-2 py-1 rounded"
-              >
-                ✕
-              </button>
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
+            <div className="bg-[#1F2937] px-6 py-5 flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-white">{editingWorker ? 'Editar trabajador' : 'Nuevo trabajador'}</h2>
+                <p className="text-sm text-slate-300">El trabajador no puede registrarse solo ni cambiar su PIN aquí.</p>
+              </div>
+              <button onClick={() => setShowForm(false)} className="text-slate-200 hover:text-white rounded-full p-2">✕</button>
             </div>
 
-            <form onSubmit={handleSaveWorker} className="p-6 space-y-4">
+            <form onSubmit={handleSaveWorker} className="p-6 space-y-6 overflow-y-auto max-h-[calc(90vh-6rem)]">
               {error && (
                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
                   {error}

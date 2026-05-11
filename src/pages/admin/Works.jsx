@@ -158,44 +158,30 @@ export default function AdminWorks() {
         <p className="text-sm text-slate-500">Las coordenadas se usan para validar fichajes en un radio de 50 metros.</p>
       </div>
 
-      <div className="bg-white rounded-3xl shadow border border-slate-200 overflow-hidden">
+      <div className="bg-slate-900 rounded-3xl shadow-lg border border-slate-700 overflow-hidden">
         {loading ? (
-          <div className="p-8 text-center text-slate-500">Cargando obras...</div>
+          <div className="p-8 text-center text-slate-400">Cargando obras...</div>
         ) : works.length === 0 ? (
-          <div className="p-8 text-center text-slate-500">
-            No hay obras disponibles. Crea la primera obra.
-          </div>
+          <div className="p-8 text-center text-slate-400">No hay obras disponibles. Crea la primera obra.</div>
         ) : (
-          <table className="min-w-full divide-y divide-slate-200">
-            <thead className="bg-slate-50">
+          <table className="min-w-full divide-y divide-slate-700">
+            <thead className="bg-slate-950">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  Nombre
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  Dirección
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  Fecha inicio
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  Coordenadas
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  Estado
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  Acciones
-                </th>
+                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">Nombre</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">Dirección</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">Fecha inicio</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">Coordenadas</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">Estado</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">Acciones</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-slate-200">
+            <tbody className="bg-slate-900 divide-y divide-slate-800">
               {works.map((work) => (
-                <tr key={work.id} className="hover:bg-slate-50">
-                  <td className="px-6 py-4 text-sm font-medium text-slate-900">{work.nombre}</td>
-                  <td className="px-6 py-4 text-sm text-slate-600">{work.direccion}</td>
-                  <td className="px-6 py-4 text-sm text-slate-600">{formatDate(work.fechaInicio)}</td>
-                  <td className="px-6 py-4 text-sm text-slate-600">
+                <tr key={work.id} className="hover:bg-slate-800">
+                  <td className="px-6 py-4 text-sm font-medium text-white">{work.nombre}</td>
+                  <td className="px-6 py-4 text-sm text-slate-300">{work.direccion}</td>
+                  <td className="px-6 py-4 text-sm text-slate-300">{formatDate(work.fechaInicio)}</td>
+                  <td className="px-6 py-4 text-sm text-slate-300">
                     {work.coordenadas?.lat && work.coordenadas?.lng
                       ? `${work.coordenadas.lat.toFixed(5)}, ${work.coordenadas.lng.toFixed(5)}`
                       : 'Sin coordenadas'}
@@ -206,15 +192,8 @@ export default function AdminWorks() {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm space-x-3">
-                    <button
-                      onClick={() => handleOpenForm(work)}
-                      className="text-slate-700 hover:text-slate-900 font-semibold"
-                    >
-                      Editar
-                    </button>
-                    <button
-                      onClick={() => handleToggleWorkStatus(work.id, work.activa)}
-                      className={`font-semibold ${work.activa ? 'text-red-600 hover:text-red-800' : 'text-green-600 hover:text-green-800'}`}>
+                    <button onClick={() => handleOpenForm(work)} className="text-sky-400 hover:text-sky-200 font-semibold">Editar</button>
+                    <button onClick={() => handleToggleWorkStatus(work.id, work.activa)} className={`font-semibold ${work.activa ? 'text-red-400 hover:text-red-200' : 'text-green-400 hover:text-green-200'}`}>
                       {work.activa ? 'Desactivar' : 'Activar'}
                     </button>
                   </td>
@@ -226,21 +205,16 @@ export default function AdminWorks() {
       </div>
 
       {showForm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
-            <div className="bg-[#1F2937] px-6 py-5 rounded-t-3xl flex items-center justify-between">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
+            <div className="bg-[#1F2937] px-6 py-5 flex items-center justify-between">
               <div>
                 <h2 className="text-2xl font-bold text-white">{editingWork ? 'Editar obra' : 'Nueva obra'}</h2>
-                <p className="text-sm text-slate-300">Captura coordenadas para fichajes seguros.</p>
+                <p className="text-sm text-slate-300">Captura todos los datos y la ubicación de la obra.</p>
               </div>
-              <button
-                onClick={() => setShowForm(false)}
-                className="text-slate-200 hover:text-white rounded-full p-2"
-              >
-                ✕
-              </button>
+              <button onClick={() => setShowForm(false)} className="text-slate-200 hover:text-white rounded-full p-2">✕</button>
             </div>
-            <form onSubmit={handleSaveWork} className="p-6 space-y-6">
+            <form onSubmit={handleSaveWork} className="p-6 space-y-6 overflow-y-auto max-h-[calc(90vh-6rem)]">
               {error && (
                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
                   {error}

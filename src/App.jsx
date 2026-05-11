@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext.jsx';
 import { WorkerProvider, useWorker } from './contexts/WorkerContext.jsx';
 import AdminDashboard from './pages/admin/Dashboard.jsx';
@@ -76,12 +76,12 @@ function LandingPage() {
               <div className="text-5xl">👷</div>
             </div>
             <p className="text-slate-300 mb-8">Accede con tu nombre y PIN. Sesión persistente en el dispositivo.</p>
-            <a
-              href="/worker/login"
+            <Link
+              to="/worker/login"
               className="inline-flex items-center justify-center w-full bg-[#F97316] hover:bg-orange-500 text-white font-bold py-4 rounded-3xl transition"
             >
               SOY TRABAJADOR
-            </a>
+            </Link>
           </div>
 
           <div className="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-lg">
@@ -93,12 +93,12 @@ function LandingPage() {
               <div className="text-5xl">⚙️</div>
             </div>
             <p className="text-slate-300 mb-8">Accede al panel para gestionar obras, trabajadores y categorías.</p>
-            <a
-              href="/admin/login"
-              className="inline-flex items-center justify-center w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-4 rounded-3xl transition"
+            <Link
+              to="/admin/login"
+              className="inline-flex items-center justify-center w-full bg-[#F97316] hover:bg-orange-500 text-white font-bold py-4 rounded-3xl transition"
             >
               ADMINISTRACIÓN
-            </a>
+            </Link>
           </div>
         </div>
       </div>
