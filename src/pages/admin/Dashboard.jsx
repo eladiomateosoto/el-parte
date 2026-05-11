@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { db } from '../../services/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { initializeDefaultCategories } from '../../services/firestore';
 import AdminLayout from '../../components/AdminLayout';
 
 export default function AdminDashboard() {
+  const navigate = useNavigate();
   const [stats, setStats] = useState({
     activeWorks: 0,
     activeWorkers: 0,
