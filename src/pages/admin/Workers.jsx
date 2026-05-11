@@ -1,11 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
 import { getActiveWorkers, createWorker, updateWorker } from '../../services/firestore';
+import AdminLayout from '../../components/AdminLayout';
 
 export default function AdminWorkers() {
-  const navigate = useNavigate();
-  const { user, logout } = useAuth();
   const [workers, setWorkers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -33,15 +30,6 @@ export default function AdminWorkers() {
       console.error(err);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      navigate('/admin/login');
-    } catch (error) {
-      console.error('Error logging out:', error);
     }
   };
 
@@ -131,41 +119,16 @@ export default function AdminWorkers() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => navigate('/admin/dashboard')}
-                className="text-orange-600 hover:text-orange-700 font-semibold"
-              >
-                ← Dashboard
-              </button>
-              <h1 className="text-2xl font-bold text-gray-900">Gestión de Trabajadores</h1>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm"
-            >
-              Cerrar sesión
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* Main content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Action button */}
-        <div className="mb-6">
-          <button
-            onClick={() => handleOpenForm()}
-            className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-lg font-semibold"
-          >
-            + Nuevo trabajador
-          </button>
-        </div>
+    <AdminLayout title="Trabajadores" description="Agrega y gestiona tu equipo sin que puedan registrarse solos" active="workers">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <button
+          onClick={() => handleOpenForm()}
+          className="bg-[#F97316] hover:bg-orange-700 text-white px-6 py-3 rounded-3xl font-semibold transition"
+        >
+          + Nuevo trabajador
+        </button>
+        <p className="text-sm text-slate-500">Los trabajadores entran con su nombre y PIN de 4 dígitos.</p>
+      </div>
 
         {/* Workers table */}
         <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -243,7 +206,6 @@ export default function AdminWorkers() {
             </table>
           )}
         </div>
-      </main>
 
       {/* Form Modal */}
       {showForm && (
@@ -382,6 +344,6 @@ export default function AdminWorkers() {
           </div>
         </div>
       )}
-    </div>
+    </AdminLayout>
   );
 }

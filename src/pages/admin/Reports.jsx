@@ -1,14 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
 import { getActiveWorks, getPartsByWork } from '../../services/firestore';
+import AdminLayout from '../../components/AdminLayout';
 import jsPDF from 'jspdf';
 import * as XLSX from 'xlsx';
 import { formatDate, formatTime } from '../../utils/helpers';
 
 export default function AdminReports() {
-  const navigate = useNavigate();
-  const { user, logout } = useAuth();
   const [works, setWorks] = useState([]);
   const [selectedWork, setSelectedWork] = useState(null);
   const [parts, setParts] = useState([]);
@@ -52,15 +49,6 @@ export default function AdminReports() {
       console.error(err);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      navigate('/admin/login');
-    } catch (error) {
-      console.error('Error logging out:', error);
     }
   };
 
@@ -234,81 +222,34 @@ export default function AdminReports() {
 
   if (!selectedWork) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={() => navigate('/admin/dashboard')}
-                  className="text-orange-600 hover:text-orange-700 font-semibold"
-                >
-                  ← Dashboard
-                </button>
-                <h1 className="text-2xl font-bold text-gray-900">Informes</h1>
-              </div>
-              <button
-                onClick={handleLogout}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm"
-              >
-                Cerrar sesión
-              </button>
-            </div>
-          </div>
-        </header>
-
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div>
-            <label className="block text-sm font-semibold text-gray-900 mb-4">
-              Selecciona una obra para ver los informes
-            </label>
-            <select
-              onChange={(e) => {
-                const work = works.find((w) => w.id === e.target.value);
-                setSelectedWork(work);
-              }}
-              className="w-full max-w-md px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-            >
-              <option value="">Elige una obra...</option>
-              {works.map((work) => (
-                <option key={work.id} value={work.id}>
-                  {work.nombre}
-                </option>
-              ))}
-            </select>
-          </div>
-        </main>
-      </div>
+      <AdminLayout title="Informes" description="Selecciona una obra para revisar horas, costes y exportar documentos" active="reports">
+        <div>
+          <label className="block text-sm font-semibold text-slate-900 mb-4">Selecciona una obra para ver los informes</label>
+          <select
+            onChange={(e) => {
+              const work = works.find((w) => w.id === e.target.value);
+              setSelectedWork(work);
+            }}
+            className="w-full max-w-md px-4 py-3 border border-slate-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-[#F97316]"
+          >
+            <option value="">Elige una obra...</option>
+            {works.map((work) => (
+              <option key={work.id} value={work.id}>
+                {work.nombre}
+              </option>
+            ))}
+          </select>
+          {error && <div className="mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">{error}</div>}
+        </div>
+      </AdminLayout>
     );
   }
 
   const stats = calculateStats();
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => navigate('/admin/dashboard')}
-                className="text-orange-600 hover:text-orange-700 font-semibold"
-              >
-                ← Dashboard
-              </button>
-              <h1 className="text-2xl font-bold text-gray-900">Informes</h1>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm"
-            >
-              Cerrar sesión
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <AdminLayout title="Informes" description="Revisa horas por obra, trabajador y categoría" active="reports">
+      <div className="space-y-6">
         {/* Work selector */}
         <div className="mb-6">
           <label className="block text-sm font-semibold text-gray-900 mb-2">
@@ -414,7 +355,7 @@ export default function AdminReports() {
             </div>
           </>
         )}
-      </main>
-    </div>
+      </div>
+    </AdminLayout>
   );
 }

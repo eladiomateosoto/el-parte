@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
 import { getActiveWorks, createWork, updateWork } from '../../services/firestore';
 import { formatDate } from '../../utils/helpers';
+import { getCurrentLocation } from '../../services/geolocation';
+import AdminLayout from '../../components/AdminLayout';
 
 export default function AdminWorks() {
-  const navigate = useNavigate();
-  const { user, logout } = useAuth();
   const [works, setWorks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -15,9 +13,11 @@ export default function AdminWorks() {
     nombre: '',
     direccion: '',
     fechaInicio: '',
+    coordenadas: { lat: null, lng: null },
     etapas: [{ nombre: '', fechaFin: '' }],
   });
   const [error, setError] = useState('');
+  const [locationLoading, setLocationLoading] = useState(false);
 
   useEffect(() => {
     fetchWorks();
@@ -36,15 +36,6 @@ export default function AdminWorks() {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-      navigate('/admin/login');
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
-  };
-
   const handleOpenForm = (work = null) => {
     if (work) {
       setEditingWork(work);
@@ -52,7 +43,8 @@ export default function AdminWorks() {
         nombre: work.nombre,
         direccion: work.direccion,
         fechaInicio: work.fechaInicio,
-        etapas: work.etapas || [],
+        coordenadas: work.coordenadas || { lat: null, lng: null },
+        etapas: work.etapas || [{ nombre: '', fechaFin: '' }],
       });
     } else {
       setEditingWork(null);
@@ -60,6 +52,7 @@ export default function AdminWorks() {
         nombre: '',
         direccion: '',
         fechaInicio: '',
+        coordenadas: { lat: null, lng: null },
         etapas: [{ nombre: '', fechaFin: '' }],
       });
     }
@@ -78,7 +71,10 @@ export default function AdminWorks() {
       setLoading(true);
       const workData = {
         ...formData,
-        coordenadas: { lat: 0, lng: 0 }, // TODO: Get from GPS
+        coordenadas: {
+          lat: formData.coordenadas?.lat ?? 0,
+          lng: formData.coordenadas?.lng ?? 0,
+        },
       };
 
       if (editingWork) {
@@ -131,247 +127,257 @@ export default function AdminWorks() {
     setFormData({ ...formData, etapas: newEtapas });
   };
 
+  const handleUseLocation = async () => {
+    try {
+      setError('');
+      setLocationLoading(true);
+      const location = await getCurrentLocation();
+      setFormData({
+        ...formData,
+        coordenadas: {
+          lat: location.lat,
+          lng: location.lng,
+        },
+      });
+    } catch (err) {
+      setError(err.message || 'No se pudo obtener la ubicación');
+    } finally {
+      setLocationLoading(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => navigate('/admin/dashboard')}
-                className="text-orange-600 hover:text-orange-700 font-semibold"
-              >
-                ← Dashboard
-              </button>
-              <h1 className="text-2xl font-bold text-gray-900">Gestión de Obras</h1>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm"
-            >
-              Cerrar sesión
-            </button>
+    <AdminLayout title="Gestión de Obras" description="Crea obras con coordenadas GPS para fichajes y control" active="works">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <button
+          onClick={() => handleOpenForm()}
+          className="bg-[#F97316] hover:bg-orange-700 text-white px-6 py-3 rounded-3xl font-semibold transition"
+        >
+          + Nueva obra
+        </button>
+        <p className="text-sm text-slate-500">Las coordenadas se usan para validar fichajes en un radio de 50 metros.</p>
+      </div>
+
+      <div className="bg-white rounded-3xl shadow border border-slate-200 overflow-hidden">
+        {loading ? (
+          <div className="p-8 text-center text-slate-500">Cargando obras...</div>
+        ) : works.length === 0 ? (
+          <div className="p-8 text-center text-slate-500">
+            No hay obras disponibles. Crea la primera obra.
           </div>
-        </div>
-      </header>
-
-      {/* Main content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Action button */}
-        <div className="mb-6">
-          <button
-            onClick={() => handleOpenForm()}
-            className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-lg font-semibold"
-          >
-            + Nueva obra
-          </button>
-        </div>
-
-        {/* Works table */}
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          {loading ? (
-            <div className="p-8 text-center text-gray-500">Cargando obras...</div>
-          ) : works.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">
-              No hay obras disponibles. Crea la primera obra.
-            </div>
-          ) : (
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Nombre
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Dirección
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Fecha inicio
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Estado
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Acciones
-                  </th>
+        ) : (
+          <table className="min-w-full divide-y divide-slate-200">
+            <thead className="bg-slate-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Nombre
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Dirección
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Fecha inicio
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Coordenadas
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Estado
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-slate-200">
+              {works.map((work) => (
+                <tr key={work.id} className="hover:bg-slate-50">
+                  <td className="px-6 py-4 text-sm font-medium text-slate-900">{work.nombre}</td>
+                  <td className="px-6 py-4 text-sm text-slate-600">{work.direccion}</td>
+                  <td className="px-6 py-4 text-sm text-slate-600">{formatDate(work.fechaInicio)}</td>
+                  <td className="px-6 py-4 text-sm text-slate-600">
+                    {work.coordenadas?.lat && work.coordenadas?.lng
+                      ? `${work.coordenadas.lat.toFixed(5)}, ${work.coordenadas.lng.toFixed(5)}`
+                      : 'Sin coordenadas'}
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${work.activa ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                      {work.activa ? 'Activa' : 'Inactiva'}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-sm space-x-3">
+                    <button
+                      onClick={() => handleOpenForm(work)}
+                      className="text-slate-700 hover:text-slate-900 font-semibold"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      onClick={() => handleToggleWorkStatus(work.id, work.activa)}
+                      className={`font-semibold ${work.activa ? 'text-red-600 hover:text-red-800' : 'text-green-600 hover:text-green-800'}`}>
+                      {work.activa ? 'Desactivar' : 'Activar'}
+                    </button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {works.map((work) => (
-                  <tr key={work.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {work.nombre}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                      {work.direccion}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                      {formatDate(work.fechaInicio)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          work.activa
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-red-100 text-red-800'
-                        }`}
-                      >
-                        {work.activa ? 'Activa' : 'Inactiva'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm space-x-2">
-                      <button
-                        onClick={() => handleOpenForm(work)}
-                        className="text-blue-600 hover:text-blue-900 font-semibold"
-                      >
-                        Editar
-                      </button>
-                      <button
-                        onClick={() => handleToggleWorkStatus(work.id, work.activa)}
-                        className={`font-semibold ${
-                          work.activa
-                            ? 'text-red-600 hover:text-red-900'
-                            : 'text-green-600 hover:text-green-900'
-                        }`}
-                      >
-                        {work.activa ? 'Desactivar' : 'Activar'}
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-      </main>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
 
-      {/* Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-96 overflow-y-auto">
-            <div className="bg-orange-600 px-6 py-4 flex justify-between items-center">
-              <h2 className="text-xl font-bold text-white">
-                {editingWork ? 'Editar obra' : 'Nueva obra'}
-              </h2>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+            <div className="bg-[#1F2937] px-6 py-5 rounded-t-3xl flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-white">{editingWork ? 'Editar obra' : 'Nueva obra'}</h2>
+                <p className="text-sm text-slate-300">Captura coordenadas para fichajes seguros.</p>
+              </div>
               <button
                 onClick={() => setShowForm(false)}
-                className="text-white hover:bg-orange-700 px-2 py-1 rounded"
+                className="text-slate-200 hover:text-white rounded-full p-2"
               >
                 ✕
               </button>
             </div>
-
-            <form onSubmit={handleSaveWork} className="p-6 space-y-4">
+            <form onSubmit={handleSaveWork} className="p-6 space-y-6">
               {error && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
                   {error}
                 </div>
               )}
 
-              {/* Nombre */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
+              <div className="grid gap-4 lg:grid-cols-2">
+                <label className="space-y-2 text-sm font-semibold text-slate-700">
                   Nombre de la obra *
+                  <input
+                    value={formData.nombre}
+                    onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+                    className="w-full px-4 py-3 border border-slate-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F97316]"
+                    required
+                  />
                 </label>
-                <input
-                  type="text"
-                  value={formData.nombre}
-                  onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  required
-                />
-              </div>
-
-              {/* Dirección */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                <label className="space-y-2 text-sm font-semibold text-slate-700">
                   Dirección *
+                  <input
+                    value={formData.direccion}
+                    onChange={(e) => setFormData({ ...formData, direccion: e.target.value })}
+                    className="w-full px-4 py-3 border border-slate-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F97316]"
+                    required
+                  />
                 </label>
-                <input
-                  type="text"
-                  value={formData.direccion}
-                  onChange={(e) => setFormData({ ...formData, direccion: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  required
-                />
               </div>
 
-              {/* Fecha inicio */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
-                  Fecha de inicio *
+              <div className="grid gap-4 lg:grid-cols-2">
+                <label className="space-y-2 text-sm font-semibold text-slate-700">
+                  Fecha inicio *
+                  <input
+                    type="date"
+                    value={formData.fechaInicio}
+                    onChange={(e) => setFormData({ ...formData, fechaInicio: e.target.value })}
+                    className="w-full px-4 py-3 border border-slate-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F97316]"
+                    required
+                  />
                 </label>
-                <input
-                  type="date"
-                  value={formData.fechaInicio}
-                  onChange={(e) => setFormData({ ...formData, fechaInicio: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  required
-                />
+                <div className="space-y-2 text-sm font-semibold text-slate-700">
+                  <span>Coordenadas</span>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <input
+                      type="text"
+                      value={formData.coordenadas?.lat ?? ''}
+                      readOnly
+                      placeholder="Latitud"
+                      className="w-full px-4 py-3 border border-slate-300 rounded-2xl bg-slate-50"
+                    />
+                    <input
+                      type="text"
+                      value={formData.coordenadas?.lng ?? ''}
+                      readOnly
+                      placeholder="Longitud"
+                      className="w-full px-4 py-3 border border-slate-300 rounded-2xl bg-slate-50"
+                    />
+                  </div>
+                </div>
               </div>
 
-              {/* Etapas */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
-                  Etapas
-                </label>
-                <div className="space-y-3">
+              <div className="bg-slate-50 border border-slate-200 rounded-3xl p-4 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-semibold text-slate-900">Etapas</h3>
+                  <button
+                    type="button"
+                    onClick={handleAddStage}
+                    className="text-sm text-blue-600 hover:text-blue-900 font-semibold"
+                  >
+                    + Agregar etapa
+                  </button>
+                </div>
+                <div className="space-y-4">
                   {formData.etapas.map((etapa, index) => (
-                    <div key={index} className="flex gap-2">
-                      <input
-                        type="text"
-                        placeholder="Nombre de la etapa"
-                        value={etapa.nombre}
-                        onChange={(e) => handleStageChange(index, 'nombre', e.target.value)}
-                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm"
-                      />
-                      <input
-                        type="date"
-                        value={etapa.fechaFin}
-                        onChange={(e) => handleStageChange(index, 'fechaFin', e.target.value)}
-                        className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm"
-                      />
+                    <div key={index} className="grid gap-3 lg:grid-cols-[1fr_auto] items-end">
+                      <div className="grid gap-3">
+                        <input
+                          type="text"
+                          placeholder="Nombre de la etapa"
+                          value={etapa.nombre}
+                          onChange={(e) => handleStageChange(index, 'nombre', e.target.value)}
+                          className="w-full px-4 py-3 border border-slate-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F97316]"
+                        />
+                        <input
+                          type="date"
+                          value={etapa.fechaFin}
+                          onChange={(e) => handleStageChange(index, 'fechaFin', e.target.value)}
+                          className="w-full px-4 py-3 border border-slate-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F97316]"
+                        />
+                      </div>
                       <button
                         type="button"
                         onClick={() => handleRemoveStage(index)}
-                        className="bg-red-100 hover:bg-red-200 text-red-600 px-3 py-2 rounded-lg text-sm"
+                        className="self-start bg-red-100 hover:bg-red-200 text-red-600 px-3 py-2 rounded-2xl text-sm"
                       >
                         Eliminar
                       </button>
                     </div>
                   ))}
                 </div>
-                <button
-                  type="button"
-                  onClick={handleAddStage}
-                  className="mt-3 text-sm text-blue-600 hover:text-blue-900 font-semibold"
-                >
-                  + Agregar etapa
-                </button>
               </div>
 
-              {/* Buttons */}
-              <div className="flex gap-3 pt-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <button
+                  type="button"
+                  onClick={handleUseLocation}
+                  disabled={locationLoading}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#F97316] hover:bg-orange-700 text-white font-semibold px-6 py-3 rounded-3xl transition disabled:opacity-60"
+                >
+                  {locationLoading ? 'Obteniendo ubicación...' : '📍 Usar mi ubicación actual'}
+                </button>
+                <span className="text-sm text-slate-500">Pulsa para llenar las coordenadas de la obra</span>
+              </div>
+
+              <div className="bg-slate-50 border border-slate-200 rounded-3xl p-4 text-sm text-slate-600">
+                <p className="font-semibold text-slate-900 mb-2">Confirmación</p>
+                <p>Cuando captures tu ubicación, estas coordenadas se guardarán con la obra para validar fichajes en un radio de 50m.</p>
+              </div>
+
+              <div className="space-y-3 sm:flex sm:space-y-0 sm:gap-3">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-[#1F2937] hover:bg-slate-900 text-white font-semibold px-6 py-3 rounded-3xl transition"
+                >
+                  {loading ? 'Guardando obra...' : 'Guardar obra'}
+                </button>
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
-                  className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold py-2 rounded-lg"
+                  className="w-full bg-slate-100 hover:bg-slate-200 text-slate-900 font-semibold px-6 py-3 rounded-3xl transition"
                 >
                   Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 rounded-lg"
-                  disabled={loading}
-                >
-                  {loading ? 'Guardando...' : 'Guardar'}
                 </button>
               </div>
             </form>
           </div>
         </div>
       )}
-    </div>
+    </AdminLayout>
   );
 }

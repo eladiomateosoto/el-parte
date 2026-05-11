@@ -59,33 +59,45 @@ function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl shadow-2xl p-10 max-w-3xl w-full">
-        <div className="text-center mb-10">
-          <h1 className="text-5xl font-bold text-orange-600 mb-4">ElParte</h1>
-          <p className="text-gray-600 text-lg">El sistema de control de obra para administradores y trabajadores.</p>
+    <div className="min-h-screen bg-[#1F2937] text-white flex items-center justify-center p-4">
+      <div className="w-full max-w-4xl rounded-[36px] border border-white/10 bg-[#111827]/90 shadow-2xl backdrop-blur-xl overflow-hidden">
+        <div className="p-10 text-center border-b border-white/10">
+          <h1 className="text-6xl font-black tracking-tight text-[#F97316]">ElParte</h1>
+          <p className="mt-4 text-xl text-slate-200">Construcciones Rosquet</p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
-          <div className="p-8 rounded-3xl border border-orange-100 bg-orange-50">
-            <h2 className="text-2xl font-semibold text-orange-700 mb-4">Soy administrador</h2>
-            <p className="text-gray-600 mb-6">Accede al panel para gestionar obras, trabajadores y categorías.</p>
+        <div className="grid gap-6 lg:grid-cols-2 p-8">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-lg">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Soy</p>
+                <h2 className="mt-3 text-3xl font-bold text-white">Trabajador</h2>
+              </div>
+              <div className="text-5xl">👷</div>
+            </div>
+            <p className="text-slate-300 mb-8">Accede con tu nombre y PIN. Sesión persistente en el dispositivo.</p>
             <a
-              href="/admin/login"
-              className="inline-flex items-center justify-center w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 rounded-lg transition"
+              href="/worker/login"
+              className="inline-flex items-center justify-center w-full bg-[#F97316] hover:bg-orange-500 text-white font-bold py-4 rounded-3xl transition"
             >
-              Iniciar sesión admin
+              SOY TRABAJADOR
             </a>
           </div>
 
-          <div className="p-8 rounded-3xl border border-orange-100 bg-white">
-            <h2 className="text-2xl font-semibold text-orange-700 mb-4">Soy trabajador</h2>
-            <p className="text-gray-600 mb-6">Fichaje y partes diarios con acceso rápido por PIN.</p>
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-lg">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Acceso</p>
+                <h2 className="mt-3 text-3xl font-bold text-white">Administración</h2>
+              </div>
+              <div className="text-5xl">⚙️</div>
+            </div>
+            <p className="text-slate-300 mb-8">Accede al panel para gestionar obras, trabajadores y categorías.</p>
             <a
-              href="/worker/login"
-              className="inline-flex items-center justify-center w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 rounded-lg transition"
+              href="/admin/login"
+              className="inline-flex items-center justify-center w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-4 rounded-3xl transition"
             >
-              Acceder como trabajador
+              ADMINISTRACIÓN
             </a>
           </div>
         </div>
