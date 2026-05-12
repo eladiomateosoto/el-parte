@@ -34,8 +34,8 @@ export default function AdminLayout({ title, description, active, children }) {
       <div className="lg:flex">
         <aside className="hidden lg:flex lg:w-80 bg-[#1F2937] text-white flex-col">
           <div className="px-6 py-8 border-b border-white/10">
-            <div className="text-3xl font-black text-[#F97316]">ElParte</div>
-            <p className="mt-2 text-sm uppercase tracking-[0.25em] text-slate-400">Construcciones Rosquet</p>
+            <img src="/logo.png" alt="ElParte" className="h-[40px] mb-2" />
+            <p className="mt-2 text-sm uppercase tracking-[0.25em] text-white">Construcciones Rosquet</p>
           </div>
 
           <nav className="flex-1 px-4 py-6 space-y-2">
@@ -56,7 +56,7 @@ export default function AdminLayout({ title, description, active, children }) {
           </nav>
 
           <div className="px-6 py-6 border-t border-white/10">
-            <div className="mb-4 text-sm text-slate-300 truncate">{user?.email || 'Administrador'}</div>
+            <div className="mb-4 text-sm text-white truncate">{user?.email || 'Administrador'}</div>
             <button
               onClick={handleLogout}
               className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-3xl"
@@ -69,8 +69,8 @@ export default function AdminLayout({ title, description, active, children }) {
         <div className="flex-1">
           <header className="lg:hidden bg-[#1F2937] px-4 py-4 flex items-center justify-between border-b border-white/10">
             <div>
-              <div className="text-2xl font-black text-[#F97316]">ElParte</div>
-              <p className="text-xs uppercase tracking-[0.25em] text-slate-300">Construcciones Rosquet</p>
+              <img src="/logo.png" alt="ElParte" className="h-[40px] mb-1" />
+              <p className="text-xs uppercase tracking-[0.25em] text-white">Construcciones Rosquet</p>
             </div>
             <button
               onClick={() => setMobileMenuOpen(true)}
@@ -86,8 +86,8 @@ export default function AdminLayout({ title, description, active, children }) {
               <div className="h-full w-72 bg-[#1F2937] p-6 shadow-2xl">
                 <div className="mb-8 flex items-center justify-between">
                   <div>
-                    <div className="text-2xl font-black text-[#F97316]">ElParte</div>
-                    <p className="text-xs uppercase tracking-[0.25em] text-slate-300">Construcciones Rosquet</p>
+                    <img src="/logo.png" alt="ElParte" className="h-[40px] mb-1" />
+                    <p className="text-xs uppercase tracking-[0.25em] text-white">Construcciones Rosquet</p>
                   </div>
                   <button
                     onClick={() => setMobileMenuOpen(false)}
@@ -116,7 +116,7 @@ export default function AdminLayout({ title, description, active, children }) {
                 </nav>
 
                 <div className="mt-8 border-t border-white/10 pt-6">
-                  <div className="mb-4 text-sm text-slate-300 truncate">{user?.email || 'Administrador'}</div>
+                  <div className="mb-4 text-sm text-white truncate">{user?.email || 'Administrador'}</div>
                   <button
                     onClick={handleLogout}
                     className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-3xl"
@@ -135,7 +135,7 @@ export default function AdminLayout({ title, description, active, children }) {
                   <div>
                     <h1 className="text-3xl md:text-4xl font-bold text-white">{title}</h1>
                     {description && (
-                      <p className="mt-3 max-w-3xl text-sm text-slate-300">{description}</p>
+                      <p className="mt-3 max-w-3xl text-sm text-white">{description}</p>
                     )}
                   </div>
                 </div>

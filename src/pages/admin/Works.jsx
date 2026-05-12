@@ -227,7 +227,7 @@ export default function AdminWorks() {
                   <input
                     value={formData.nombre}
                     onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-                    className="w-full px-4 py-3 border border-slate-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F97316]"
+                    className="w-full px-4 py-3 border border-slate-300 rounded-2xl bg-[#374151] text-white focus:outline-none focus:ring-2 focus:ring-[#F97316]"
                     required
                   />
                 </label>
@@ -236,7 +236,7 @@ export default function AdminWorks() {
                   <input
                     value={formData.direccion}
                     onChange={(e) => setFormData({ ...formData, direccion: e.target.value })}
-                    className="w-full px-4 py-3 border border-slate-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F97316]"
+                    className="w-full px-4 py-3 border border-slate-300 rounded-2xl bg-[#374151] text-white focus:outline-none focus:ring-2 focus:ring-[#F97316]"
                     required
                   />
                 </label>
@@ -249,7 +249,7 @@ export default function AdminWorks() {
                     type="date"
                     value={formData.fechaInicio}
                     onChange={(e) => setFormData({ ...formData, fechaInicio: e.target.value })}
-                    className="w-full px-4 py-3 border border-slate-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F97316]"
+                    className="w-full px-4 py-3 border border-slate-300 rounded-2xl bg-[#374151] text-white focus:outline-none focus:ring-2 focus:ring-[#F97316]"
                     required
                   />
                 </label>
@@ -261,14 +261,14 @@ export default function AdminWorks() {
                       value={formData.coordenadas?.lat ?? ''}
                       readOnly
                       placeholder="Latitud"
-                      className="w-full px-4 py-3 border border-slate-300 rounded-2xl bg-slate-50"
+                      className="w-full px-4 py-3 border border-slate-300 rounded-2xl bg-[#374151] text-white"
                     />
                     <input
                       type="text"
                       value={formData.coordenadas?.lng ?? ''}
                       readOnly
                       placeholder="Longitud"
-                      className="w-full px-4 py-3 border border-slate-300 rounded-2xl bg-slate-50"
+                      className="w-full px-4 py-3 border border-slate-300 rounded-2xl bg-[#374151] text-white"
                     />
                   </div>
                 </div>
@@ -294,13 +294,13 @@ export default function AdminWorks() {
                           placeholder="Nombre de la etapa"
                           value={etapa.nombre}
                           onChange={(e) => handleStageChange(index, 'nombre', e.target.value)}
-                          className="w-full px-4 py-3 border border-slate-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F97316]"
+                          className="w-full px-4 py-3 border border-slate-300 rounded-2xl bg-[#374151] text-white focus:outline-none focus:ring-2 focus:ring-[#F97316]"
                         />
                         <input
                           type="date"
                           value={etapa.fechaFin}
                           onChange={(e) => handleStageChange(index, 'fechaFin', e.target.value)}
-                          className="w-full px-4 py-3 border border-slate-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F97316]"
+                          className="w-full px-4 py-3 border border-slate-300 rounded-2xl bg-[#374151] text-white focus:outline-none focus:ring-2 focus:ring-[#F97316]"
                         />
                       </div>
                       <button
@@ -322,7 +322,7 @@ export default function AdminWorks() {
                   disabled={locationLoading}
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#F97316] hover:bg-orange-700 text-white font-semibold px-6 py-3 rounded-3xl transition disabled:opacity-60"
                 >
-                  {locationLoading ? 'Obteniendo ubicación...' : '📍 Usar mi ubicación actual'}
+                  {locationLoading ? 'Obteniendo ubicación...' : '📍 Capturar mi ubicación GPS'}
                 </button>
                 <span className="text-sm text-slate-500">Pulsa para llenar las coordenadas de la obra</span>
               </div>

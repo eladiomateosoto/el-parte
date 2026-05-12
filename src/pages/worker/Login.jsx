@@ -69,8 +69,8 @@ export default function WorkerLogin() {
     <div className="min-h-screen bg-[#1F2937] flex items-center justify-center p-4">
       <div className="w-full max-w-md rounded-[32px] border border-white/10 bg-white/95 shadow-2xl overflow-hidden">
         <div className="bg-[#1F2937] px-8 py-10 text-center text-white">
-          <h1 className="text-5xl font-black tracking-tight text-[#F97316]">ElParte</h1>
-          <p className="mt-4 text-sm uppercase tracking-[0.3em] text-slate-300">Construcciones Rosquet</p>
+          <img src="/logo.png" alt="ElParte" className="w-[150px] mx-auto mb-4" />
+          <p className="mt-4 text-sm uppercase tracking-[0.3em] text-white">Construcciones Rosquet</p>
         </div>
 
         <div className="px-8 py-8">

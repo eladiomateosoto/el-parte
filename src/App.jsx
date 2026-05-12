@@ -62,20 +62,20 @@ function LandingPage() {
     <div className="min-h-screen bg-[#1F2937] text-white flex items-center justify-center p-4">
       <div className="w-full max-w-4xl rounded-[36px] border border-white/10 bg-[#111827]/90 shadow-2xl backdrop-blur-xl overflow-hidden">
         <div className="p-10 text-center border-b border-white/10">
-          <h1 className="text-6xl font-black tracking-tight text-[#F97316]">ElParte</h1>
-          <p className="mt-4 text-xl text-slate-200">Construcciones Rosquet</p>
+          <img src="/logo.png" alt="ElParte" className="w-[200px] mx-auto mb-4" />
+          <p className="mt-4 text-xl text-white">Construcciones Rosquet</p>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2 p-8">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-lg">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Soy</p>
+                <p className="text-sm uppercase tracking-[0.3em] text-white">Soy</p>
                 <h2 className="mt-3 text-3xl font-bold text-white">Trabajador</h2>
               </div>
               <div className="text-5xl">👷</div>
             </div>
-            <p className="text-slate-300 mb-8">Accede con tu nombre y PIN. Sesión persistente en el dispositivo.</p>
+            <p className="text-white mb-8">Accede con tu nombre y PIN. Sesión persistente en el dispositivo.</p>
             <Link
               to="/worker/login"
               className="inline-flex items-center justify-center w-full bg-[#F97316] hover:bg-orange-500 text-white font-bold py-4 rounded-3xl transition"
@@ -87,12 +87,12 @@ function LandingPage() {
           <div className="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-lg">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Acceso</p>
+                <p className="text-sm uppercase tracking-[0.3em] text-white">Acceso</p>
                 <h2 className="mt-3 text-3xl font-bold text-white">Administración</h2>
               </div>
               <div className="text-5xl">⚙️</div>
             </div>
-            <p className="text-slate-300 mb-8">Accede al panel para gestionar obras, trabajadores y categorías.</p>
+            <p className="text-white mb-8">Accede al panel para gestionar obras, trabajadores y categorías.</p>
             <Link
               to="/admin/login"
               className="inline-flex items-center justify-center w-full bg-[#F97316] hover:bg-orange-500 text-white font-bold py-4 rounded-3xl transition"

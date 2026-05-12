@@ -194,27 +194,27 @@ export default function AdminWorkers() {
 
               {/* Nombre */}
               <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
                   Nombre completo *
                 </label>
                 <input
                   type="text"
                   value={formData.nombre}
                   onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg bg-[#374151] text-white focus:outline-none focus:ring-2 focus:ring-[#F97316]"
                   required
                 />
               </div>
 
               {/* Puesto */}
               <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
                   Puesto *
                 </label>
                 <select
                   value={formData.puesto}
                   onChange={(e) => setFormData({ ...formData, puesto: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg bg-[#374151] text-white focus:outline-none focus:ring-2 focus:ring-[#F97316]"
                   required
                 >
                   <option value="">Selecciona un puesto</option>
@@ -228,7 +228,7 @@ export default function AdminWorkers() {
 
               {/* Coste por hora */}
               <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
                   Coste por hora (€) *
                 </label>
                 <input
@@ -237,7 +237,7 @@ export default function AdminWorkers() {
                   min="0"
                   value={formData.costePorHora}
                   onChange={(e) => setFormData({ ...formData, costePorHora: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg bg-[#374151] text-white focus:outline-none focus:ring-2 focus:ring-[#F97316]"
                   required
                 />
               </div>
@@ -246,7 +246,7 @@ export default function AdminWorkers() {
               {!editingWorker && (
                 <>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">
                       PIN (4 dígitos) *
                     </label>
                     <input
@@ -258,14 +258,14 @@ export default function AdminWorkers() {
                         const value = e.target.value.replace(/\D/g, '').slice(0, 4);
                         setFormData({ ...formData, pin: value });
                       }}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 font-mono text-center text-2xl"
+                      className="w-full px-4 py-2 border border-slate-300 rounded-lg bg-[#374151] text-white focus:outline-none focus:ring-2 focus:ring-[#F97316] font-mono text-center text-2xl"
                       placeholder="••••"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">
                       Confirmar PIN *
                     </label>
                     <input
@@ -277,7 +277,7 @@ export default function AdminWorkers() {
                         const value = e.target.value.replace(/\D/g, '').slice(0, 4);
                         setFormData({ ...formData, pinConfirm: value });
                       }}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 font-mono text-center text-2xl"
+                      className="w-full px-4 py-2 border border-slate-300 rounded-lg bg-[#374151] text-white focus:outline-none focus:ring-2 focus:ring-[#F97316] font-mono text-center text-2xl"
                       placeholder="••••"
                       required
                     />
@@ -296,7 +296,7 @@ export default function AdminWorkers() {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 rounded-lg"
+                  className="flex-1 bg-[#F97316] hover:bg-orange-600 text-white font-semibold py-2 rounded-lg"
                   disabled={loading}
                 >
                   {loading ? 'Guardando...' : 'Guardar'}
